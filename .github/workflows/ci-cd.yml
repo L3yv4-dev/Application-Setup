@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js 22.16.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.16.0'
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js 22.16.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.16.0'
+      - run: npm ci
+      - run: npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js 22.16.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.16.0'
+      - run: npm ci
+      - run: npm run build
+
+  notify-slack:
+    if: failure()  # Solo se ejecuta si algún job anterior falla
+    runs-on: ubuntu-latest
+    needs: [lint, test, build]
+    steps:
+      - name: Enviar notificación a Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  # Configura este secreto en tu repo con el webhook de Slack
+          SLACK_CHANNEL: '#canal-ci'                    # Cambia por tu canal de Slack
+          SLACK_USERNAME: 'GitHub Actions Bot'
+          SLACK_TITLE: '❌ Pipeline Falló'
+          SLACK_MESSAGE: 'El pipeline de CI/CD ha fallado. Revisa los logs para más detalles.'
+          SLACK_COLOR: danger
