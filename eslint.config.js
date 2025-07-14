@@ -17,28 +17,42 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-module.exports = defineConfig([{
+module.exports = defineConfig([
+  {
     languageOptions: {
-        parser: tsParser,
-        sourceType: "module",
+      parser: tsParser,
+      sourceType: "module",
 
-        parserOptions: {
-            project: "tsconfig.json",
-        },
+      parserOptions: {
+        project: "./tsconfig.eslint.json",
+        tsconfigRootDir: __dirname,
+      },
 
-        globals: {
-            ...globals.node,
-            ...globals.jest,
-        },
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
     },
 
     plugins: {
-        "@typescript-eslint": typescriptEslint,
+      "@typescript-eslint": typescriptEslint,
     },
 
     extends: compat.extends("plugin:@typescript-eslint/recommended", "prettier"),
 
     rules: {
-        "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
-}]);
+  },
+
+  // Override para eslint.config.js: deshabilitar chequeo de tipos (sin project)
+  {
+    files: ["eslint.config.js"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: null,  // Desactiva el uso de tsconfig para este archivo
+      },
+    },
+  },
+]);
