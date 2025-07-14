@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ES2017",                      // o superior
     "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "experimentalDecorators": true,         // Habilita decoradores
+    "emitDecoratorMetadata": true,          // Habilita metadata para decoradores
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+,
 "include": [
   "src",
 ]
