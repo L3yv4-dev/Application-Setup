@@ -13,7 +13,10 @@ export class AppController {
   ) {}
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Devuelve el clasico \'Hello world\'' })
+  @ApiResponse({
+    status: 200,
+    description: "Devuelve el clasico 'Hello world'",
+  })
   getHello(): string {
     this.logger.info('Mensaje de log con requestId');
     return this.appService.getHello();

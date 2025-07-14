@@ -7,6 +7,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+function hasMessageProp(obj: unknown): obj is { message?: string | string[] } {
+  return typeof obj === 'object' && obj !== null && 'message' in obj;
+}
+
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
@@ -14,7 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    let status =
+    const status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
@@ -24,9 +28,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getResponse()
         : 'Internal server error';
 
-    // Si el mensaje es un objeto, extraer el mensaje principal
-    if (typeof message === 'object' && message !== null && 'message' in message) {
-      message = (message as any).message;
+    if (hasMessageProp(message)) {
+      message = message.message ?? 'Internal server error';
     }
 
     response.status(status).json({
