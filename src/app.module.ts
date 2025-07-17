@@ -9,6 +9,7 @@ import DailyRotateFile from 'winston-daily-rotate-file';
 import { HealthModule } from './modules/health/health.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { AppService } from './app.service';
     }),
 
     HealthModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
