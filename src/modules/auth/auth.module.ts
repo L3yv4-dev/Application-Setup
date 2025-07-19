@@ -16,8 +16,8 @@ import { UsersModule } from '../users/users.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        privateKey: fs.readFileSync(configService.get<string>('JWT_PRIVATE_KEY_PATH')!, 'utf8'),
-        publicKey: fs.readFileSync(configService.get<string>('JWT_PUBLIC_KEY_PATH')!, 'utf8'),
+        privateKey: fs.readFileSync(configService.get<string>('JWT_PRIVATE_KEY')!, 'utf8'),
+        publicKey: fs.readFileSync(configService.get<string>('JWT_PUBLIC_KEY')!, 'utf8'),
         signOptions: { algorithm: 'RS256', expiresIn: '15m' },
       }),
       inject: [ConfigService],
